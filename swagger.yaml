@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+  title: API de Plantillas FastCRM
+  description: API para gestionar plantillas de mensajes predeterminados
+  version: 1.0.0
+  
+servers:
+  - url: http://localhost:5000/api
+    description: Servidor de desarrollo
+
+tags:
+  - name: Plantillas
+    description: Operaciones con plantillas de mensajes
+
+paths:
+  /plantillas:
+    get:
+      summary: Obtiene todas las plantillas
+      tags: [Plantillas]
+      responses:
+        200:
+          description: Lista de plantillas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plantilla'
+        500:
+          description: Error del servidor
+    
+    post:
+      summary: Crea una nueva plantilla
+      tags: [Plantillas]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantillaInput'
+      responses:
+        201:
+          description: Plantilla creada
+        400:
+          description: Datos inválidos
+        500:
+          description: Error del servidor
+  
+  /plantillas/{id}:
+    get:
+      summary: Obtiene una plantilla por su ID
+      tags: [Plantillas]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Plantilla encontrada
+        404:
+          description: Plantilla no encontrada
+        500:
+          description: Error del servidor
+    
+    put:
+      summary: Actualiza una plantilla
+      tags: [Plantillas]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlantillaInput'
+      responses:
+        200:
+          description: Plantilla actualizada
+        400:
+          description: Datos inválidos
+        404:
+          description: Plantilla no encontrada
+        500:
+          description: Error del servidor
+    
+    delete:
+      summary: Elimina una plantilla
+      tags: [Plantillas]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Plantilla eliminada
+        404:
+          description: Plantilla no encontrada
+        500:
+          description: Error del servidor
+
+components:
+  schemas:
+    Plantilla:
+      type: object
+      properties:
+        _id:
+          type: string
+        nombre:
+          type: string
+        contenido:
+          type: string
+        tipo:
+          type: string
+          enum: [email, documento, mensaje]
+        variables:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    PlantillaInput:
+      type: object
+      required:
+        - nombre
+        - contenido
+        - tipo
+      properties:
+        nombre:
+          type: string
+        contenido:
+          type: string
+        tipo:
+          type: string
+          enum: [email, documento, mensaje]
+        variables:
+          type: array
+          items:
+            type: string 
